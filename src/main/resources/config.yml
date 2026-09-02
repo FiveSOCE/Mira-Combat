@@ -14,6 +14,21 @@ combat:
   disable-shields: true
   reset-sprint-on-hit: true
 
+  legacy-tooltips:
+    # Removes the modern Attack Damage / Attack Speed attribute lines from
+    # swords, axes and other combat-capable tools while preserving real stats.
+    hide-attack-attributes: true
+
+  restricted-items:
+    enabled: true
+    delete-message: "&cThis item is disabled and has been deleted."
+    materials:
+      - TRIDENT
+      - MACE
+      - SHIELD
+      - SPEAR
+      - WIND_CHARGE
+
   knockback:
     enabled: true
     horizontal: 0.40
