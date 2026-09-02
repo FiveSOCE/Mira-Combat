@@ -5,8 +5,10 @@ import com.mira.combat.command.MiraCombatCommand;
 import com.mira.combat.listener.CombatListener;
 import com.mira.combat.listener.ItemPolicyListener;
 import com.mira.combat.listener.RegenerationListener;
+import com.mira.combat.listener.WorldPolicyListener;
 import com.mira.combat.service.CombatProfileService;
 import com.mira.combat.service.ItemPolicyService;
+import com.mira.combat.service.WorldPolicyService;
 import com.mira.combat.util.CombatNumbers;
 import com.mira.core.api.MiraCore;
 import com.mira.core.api.MiraCoreProvider;
@@ -19,6 +21,7 @@ public final class MiraCombatPlugin extends JavaPlugin {
     private MiraCore core;
     private CombatProfileService profiles;
     private ItemPolicyService itemPolicy;
+    private WorldPolicyService worldPolicy;
     private MiraCombatApi api;
 
     @Override
@@ -28,6 +31,7 @@ public final class MiraCombatPlugin extends JavaPlugin {
         core = MiraCoreProvider.require();
         profiles = new CombatProfileService(this);
         itemPolicy = new ItemPolicyService(this, core);
+        worldPolicy = new WorldPolicyService(this);
         api = new MiraCombatApiImpl(this, profiles);
 
         core.modules().register(this, "MiraCombat");
@@ -35,6 +39,7 @@ public final class MiraCombatPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new CombatListener(this, profiles), this);
         getServer().getPluginManager().registerEvents(new ItemPolicyListener(this, itemPolicy), this);
+        getServer().getPluginManager().registerEvents(new WorldPolicyListener(worldPolicy), this);
 
         RegenerationListener regeneration = new RegenerationListener(this);
         getServer().getPluginManager().registerEvents(regeneration, this);
@@ -59,7 +64,7 @@ public final class MiraCombatPlugin extends JavaPlugin {
         }
 
         core.modules().setHealth(this, ModuleHealth.HEALTHY,
-                "Legacy combat, clean tooltips and restricted modern items ready");
+                "Legacy combat, restricted modern items, mobs and structures ready");
         getLogger().info("MiraCombat v" + getPluginMeta().getVersion() + " enabled.");
     }
 
@@ -78,6 +83,9 @@ public final class MiraCombatPlugin extends JavaPlugin {
         if (itemPolicy != null) {
             itemPolicy.reload();
             itemPolicy.sweepAll();
+        }
+        if (worldPolicy != null) {
+            worldPolicy.reload();
         }
     }
 
