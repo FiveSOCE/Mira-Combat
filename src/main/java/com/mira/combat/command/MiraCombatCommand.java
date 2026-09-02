@@ -2,10 +2,12 @@ package com.mira.combat.command;
 
 import com.mira.combat.MiraCombatPlugin;
 import com.mira.combat.service.CombatProfileService;
+import com.mira.combat.service.PvpDummyService;
 import com.mira.core.api.MiraCore;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -15,11 +17,13 @@ public final class MiraCombatCommand implements TabExecutor {
     private final MiraCombatPlugin plugin;
     private final MiraCore core;
     private final CombatProfileService profiles;
+    private final PvpDummyService dummies;
 
-    public MiraCombatCommand(MiraCombatPlugin plugin, MiraCore core, CombatProfileService profiles) {
+    public MiraCombatCommand(MiraCombatPlugin plugin, MiraCore core, CombatProfileService profiles, PvpDummyService dummies) {
         this.plugin = plugin;
         this.core = core;
         this.profiles = profiles;
+        this.dummies = dummies;
     }
 
     @Override
@@ -45,10 +49,42 @@ public final class MiraCombatCommand implements TabExecutor {
                 profiles.refresh(player);
                 core.messages().send(sender, "&aReapplied your MiraCombat profile.");
             }
+            case "dummy" -> dummy(sender, args);
             case "help" -> help(sender);
             default -> help(sender);
         }
         return true;
+    }
+
+    private void dummy(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            core.messages().send(sender, "&cDummy commands must be run by a player.");
+            return;
+        }
+        if (args.length < 2) {
+            core.messages().send(sender, "&f/mcombat dummy add &7- Place a PvP dummy on the block you are looking at");
+            core.messages().send(sender, "&f/mcombat dummy remove &7- Remove the PvP dummy you are looking at");
+            return;
+        }
+
+        switch (args[1].toLowerCase(Locale.ROOT)) {
+            case "add" -> {
+                ArmorStand dummy = dummies.add(player);
+                if (dummy == null) {
+                    core.messages().send(sender, "&cLook at a block within 12 blocks, then try again.");
+                } else {
+                    core.messages().send(sender, "&aPvP Dummy placed. &7It is persistent and cannot take damage.");
+                }
+            }
+            case "remove" -> {
+                if (dummies.removeLookedAt(player)) {
+                    core.messages().send(sender, "&aPvP Dummy removed.");
+                } else {
+                    core.messages().send(sender, "&cLook directly at a PvP Dummy within 12 blocks, then try again.");
+                }
+            }
+            default -> core.messages().send(sender, "&cUse /mcombat dummy <add|remove>.");
+        }
     }
 
     private void status(CommandSender sender) {
@@ -57,7 +93,7 @@ public final class MiraCombatCommand implements TabExecutor {
                 + " &7Attack speed: &f" + plugin.attackSpeed()
                 + " &7Max hurt ticks: &f" + plugin.maximumNoDamageTicks());
         core.messages().send(sender, "&7Sweep disabled: " + yes(plugin.disableSweepAttacks())
-                + " &7Shields disabled: " + yes(plugin.disableShields())
+                + " &7Modern attack sounds: " + yes(!plugin.suppressModernAttackSounds())
                 + " &7Sprint reset: " + yes(plugin.resetSprintOnHit()));
         core.messages().send(sender, "&7KB H/V: &f" + plugin.knockbackHorizontal() + "/" + plugin.knockbackVertical()
                 + " &7Rod/Snowball/Egg: " + yes(plugin.fishingRodKnockback()) + "/"
@@ -86,6 +122,8 @@ public final class MiraCombatCommand implements TabExecutor {
         core.messages().send(sender, "&f/mcombat test &7- Run runtime diagnostics");
         core.messages().send(sender, "&f/mcombat reload &7- Reload tuning and refresh online players");
         core.messages().send(sender, "&f/mcombat apply &7- Reapply your combat profile");
+        core.messages().send(sender, "&f/mcombat dummy add &7- Place an indestructible PvP dummy");
+        core.messages().send(sender, "&f/mcombat dummy remove &7- Remove the dummy you are looking at");
     }
 
     private static String yes(boolean value) {
@@ -94,9 +132,16 @@ public final class MiraCombatCommand implements TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (!sender.hasPermission("miracombat.admin") || args.length != 1) return List.of();
-        String prefix = args[0].toLowerCase(Locale.ROOT);
-        return List.of("status", "test", "reload", "apply", "help").stream()
-                .filter(value -> value.startsWith(prefix)).toList();
+        if (!sender.hasPermission("miracombat.admin")) return List.of();
+        if (args.length == 1) {
+            String prefix = args[0].toLowerCase(Locale.ROOT);
+            return List.of("status", "test", "reload", "apply", "dummy", "help").stream()
+                    .filter(value -> value.startsWith(prefix)).toList();
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("dummy")) {
+            String prefix = args[1].toLowerCase(Locale.ROOT);
+            return List.of("add", "remove").stream().filter(value -> value.startsWith(prefix)).toList();
+        }
+        return List.of();
     }
 }

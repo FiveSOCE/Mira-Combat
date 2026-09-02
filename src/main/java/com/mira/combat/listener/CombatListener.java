@@ -5,6 +5,7 @@ import com.mira.combat.service.CombatProfileService;
 import com.mira.combat.util.CombatMath;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.EnderPearl;
@@ -28,7 +29,18 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import java.util.List;
+
 public final class CombatListener implements Listener {
+    private static final List<Sound> MODERN_ATTACK_SOUNDS = List.of(
+            Sound.ENTITY_PLAYER_ATTACK_SWEEP,
+            Sound.ENTITY_PLAYER_ATTACK_STRONG,
+            Sound.ENTITY_PLAYER_ATTACK_CRIT,
+            Sound.ENTITY_PLAYER_ATTACK_KNOCKBACK,
+            Sound.ENTITY_PLAYER_ATTACK_NODAMAGE,
+            Sound.ENTITY_PLAYER_ATTACK_WEAK
+    );
+
     private final MiraCombatPlugin plugin;
     private final CombatProfileService profiles;
 
@@ -61,13 +73,28 @@ public final class CombatListener implements Listener {
             return;
         }
 
-        if (plugin.resetSprintOnHit()
-                && event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK
-                && event.getDamager() instanceof Player attacker
-                && event.getEntity() instanceof Player) {
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                if (attacker.isOnline()) attacker.setSprinting(false);
-            });
+        if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK
+                && event.getDamager() instanceof Player attacker) {
+            if (plugin.suppressModernAttackSounds()) {
+                suppressModernAttackSounds(attacker);
+                Bukkit.getScheduler().runTask(plugin, () -> suppressModernAttackSounds(attacker));
+            }
+
+            if (plugin.resetSprintOnHit() && event.getEntity() instanceof Player) {
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    if (attacker.isOnline()) attacker.setSprinting(false);
+                });
+            }
+        }
+    }
+
+    private void suppressModernAttackSounds(Player attacker) {
+        if (!attacker.isOnline()) return;
+        for (Player listener : attacker.getWorld().getPlayers()) {
+            if (listener.getLocation().distanceSquared(attacker.getLocation()) > 2304.0D) continue;
+            for (Sound sound : MODERN_ATTACK_SOUNDS) {
+                listener.stopSound(sound);
+            }
         }
     }
 

@@ -1,5 +1,5 @@
 name: MiraCombat
-version: 0.1.2
+version: 0.1.3
 main: com.mira.combat.MiraCombatPlugin
 api-version: '1.21'
 authors: [FiveS]
@@ -9,13 +9,13 @@ depend: [MiraCore]
 commands:
   miracombat:
     description: MiraCombat administration and diagnostics.
-    usage: /miracombat <status|test|reload|apply>
+    usage: /miracombat <status|test|reload|apply|dummy>
     aliases: [mcombat]
     permission: miracombat.admin
 
 permissions:
   miracombat.admin:
-    description: Allows MiraCombat administration commands.
+    description: Allows MiraCombat administration commands and PvP dummy management.
     default: op
   miracombat.restricted-items.bypass:
     description: Allows possession and use of items disabled by MiraCombat.
