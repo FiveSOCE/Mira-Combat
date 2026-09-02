@@ -2,9 +2,11 @@
 
 MiraCombat is the combat engine for the Mira Minecraft plugin ecosystem. It targets **Paper 1.21.11** and **Java 21** and requires **MiraCore 0.1.0+**.
 
-## Current development version
+## Download
 
-**v0.1.0**
+[**Download MiraCombat v0.1.0**](https://github.com/FiveSOCE/Mira-Combat/releases/download/v0.1.0/MiraCombat-0.1.0.jar)
+
+Current release: **v0.1.0**
 
 ## v0.1.0 foundation
 
