@@ -1,0 +1,19 @@
+name: MiraCombat
+version: 0.1.0
+main: com.mira.combat.MiraCombatPlugin
+api-version: '1.21'
+authors: [FiveS]
+description: Configurable 1.8-style PvP mechanics for the Mira plugin ecosystem.
+depend: [MiraCore]
+
+commands:
+  miracombat:
+    description: MiraCombat administration and diagnostics.
+    usage: /miracombat <status|test|reload|apply>
+    aliases: [mcombat]
+    permission: miracombat.admin
+
+permissions:
+  miracombat.admin:
+    description: Allows MiraCombat administration commands.
+    default: op

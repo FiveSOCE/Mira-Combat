@@ -1,0 +1,42 @@
+combat:
+  enabled: true
+
+  # A very high attack speed removes the modern 1.9+ weapon cooldown while
+  # keeping normal server-side hit processing intact.
+  attack-speed: 1024.0
+
+  # Vanilla-style hurt resistance is still useful for consistent combos.
+  # 20 is the classic Minecraft maximum. Tune later if the server needs a
+  # faster or slower hit rhythm.
+  maximum-no-damage-ticks: 20
+
+  disable-sweep-attacks: true
+  disable-shields: true
+  reset-sprint-on-hit: true
+
+  knockback:
+    enabled: true
+    horizontal: 0.40
+    vertical: 0.40
+    vertical-limit: 0.40
+    sprint-horizontal-bonus: 0.18
+    sprint-vertical-bonus: 0.02
+    enchantment-horizontal-bonus-per-level: 0.12
+
+  projectiles:
+    fishing-rod-knockback: true
+    snowball-knockback: true
+    egg-knockback: true
+    horizontal: 0.32
+    vertical: 0.28
+    vertical-limit: 0.38
+
+  ender-pearls:
+    cooldown-ticks: 0
+
+  regeneration:
+    legacy-satiated-regeneration: true
+    interval-ticks: 80
+    heal-amount: 1.0
+    minimum-food-level: 18
+    exhaustion-per-heal: 3.0
