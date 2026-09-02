@@ -1,9 +1,9 @@
 name: MiraCombat
-version: 0.1.0
+version: 0.1.1
 main: com.mira.combat.MiraCombatPlugin
 api-version: '1.21'
 authors: [FiveS]
-description: Configurable 1.8-style PvP mechanics for the Mira plugin ecosystem.
+description: Configurable 1.7-style PvP mechanics for the Mira plugin ecosystem.
 depend: [MiraCore]
 
 commands:
@@ -16,4 +16,7 @@ commands:
 permissions:
   miracombat.admin:
     description: Allows MiraCombat administration commands.
+    default: op
+  miracombat.restricted-items.bypass:
+    description: Allows possession and use of items disabled by MiraCombat.
     default: op
