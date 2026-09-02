@@ -1,5 +1,5 @@
 name: MiraCombat
-version: 0.1.1
+version: 0.1.2
 main: com.mira.combat.MiraCombatPlugin
 api-version: '1.21'
 authors: [FiveS]
