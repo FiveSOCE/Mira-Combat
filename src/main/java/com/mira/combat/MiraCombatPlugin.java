@@ -3,8 +3,10 @@ package com.mira.combat;
 import com.mira.combat.api.MiraCombatApi;
 import com.mira.combat.command.MiraCombatCommand;
 import com.mira.combat.listener.CombatListener;
+import com.mira.combat.listener.ItemPolicyListener;
 import com.mira.combat.listener.RegenerationListener;
 import com.mira.combat.service.CombatProfileService;
+import com.mira.combat.service.ItemPolicyService;
 import com.mira.combat.util.CombatNumbers;
 import com.mira.core.api.MiraCore;
 import com.mira.core.api.MiraCoreProvider;
@@ -16,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class MiraCombatPlugin extends JavaPlugin {
     private MiraCore core;
     private CombatProfileService profiles;
+    private ItemPolicyService itemPolicy;
     private MiraCombatApi api;
 
     @Override
@@ -24,15 +27,22 @@ public final class MiraCombatPlugin extends JavaPlugin {
 
         core = MiraCoreProvider.require();
         profiles = new CombatProfileService(this);
+        itemPolicy = new ItemPolicyService(this, core);
         api = new MiraCombatApiImpl(this, profiles);
 
         core.modules().register(this, "MiraCombat");
         core.services().register(MiraCombatApi.class, api);
 
         getServer().getPluginManager().registerEvents(new CombatListener(this, profiles), this);
+        getServer().getPluginManager().registerEvents(new ItemPolicyListener(this, itemPolicy), this);
+
         RegenerationListener regeneration = new RegenerationListener(this);
         getServer().getPluginManager().registerEvents(regeneration, this);
         getServer().getScheduler().runTaskTimer(this, regeneration, 20L, 20L);
+
+        // Event handlers catch normal acquisition paths immediately. This small fallback
+        // sweep also catches /give, plugin rewards and other direct inventory mutations.
+        getServer().getScheduler().runTaskTimer(this, itemPolicy::sweepAll, 5L, 5L);
 
         MiraCombatCommand command = new MiraCombatCommand(this, core, profiles);
         PluginCommand pluginCommand = getCommand("miracombat");
@@ -43,10 +53,13 @@ public final class MiraCombatPlugin extends JavaPlugin {
         pluginCommand.setExecutor(command);
         pluginCommand.setTabCompleter(command);
 
-        for (Player player : getServer().getOnlinePlayers()) profiles.apply(player);
+        for (Player player : getServer().getOnlinePlayers()) {
+            profiles.apply(player);
+            itemPolicy.enforce(player);
+        }
 
         core.modules().setHealth(this, ModuleHealth.HEALTHY,
-                "Legacy attack timing, knockback, projectiles and regeneration ready");
+                "Legacy combat, clean tooltips and restricted modern items ready");
         getLogger().info("MiraCombat v" + getPluginMeta().getVersion() + " enabled.");
     }
 
@@ -62,6 +75,10 @@ public final class MiraCombatPlugin extends JavaPlugin {
     public void reloadPluginConfiguration() {
         reloadConfig();
         profiles.refreshAll();
+        if (itemPolicy != null) {
+            itemPolicy.reload();
+            itemPolicy.sweepAll();
+        }
     }
 
     public boolean combatEnabled() {
