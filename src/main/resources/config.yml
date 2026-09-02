@@ -28,6 +28,26 @@ combat:
       - SHIELD
       - SPEAR
       - WIND_CHARGE
+      - RESPAWN_ANCHOR
+      - END_CRYSTAL
+      - TOTEM_OF_UNDYING
+      - HEAVY_CORE
+      - BREEZE_ROD
+      - TRIAL_KEY
+      - OMINOUS_TRIAL_KEY
+      - BUNDLE
+      - RECOVERY_COMPASS
+
+  world-policy:
+    blocked-mobs:
+      - COPPER_GOLEM
+      - BREEZE
+      - WARDEN
+      - HAPPY_GHAST
+    blocked-structures:
+      - ANCIENT_CITY
+      - TRIAL_CHAMBERS
+      - TRAIL_RUINS
 
   knockback:
     enabled: true
