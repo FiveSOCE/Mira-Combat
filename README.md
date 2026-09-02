@@ -4,13 +4,43 @@ MiraCombat is the combat engine for the Mira Minecraft plugin ecosystem. It targ
 
 ## Download
 
-[**Download MiraCombat v0.1.0**](https://github.com/FiveSOCE/Mira-Combat/releases/download/v0.1.0/MiraCombat-0.1.0.jar)
+[**Download MiraCombat v0.1.1**](https://github.com/FiveSOCE/Mira-Combat/releases/download/v0.1.1/MiraCombat-0.1.1.jar)
 
-Current release: **v0.1.0**
+Current release: **v0.1.1**
 
-## v0.1.0 foundation
+## v0.1.1 legacy presentation and restricted items
 
-MiraCombat provides a configurable old-school PvP baseline on a modern Paper server:
+MiraCombat now removes the modern `Attack Damage` and `Attack Speed` attribute lines from combat-capable tool tooltips while preserving the actual combat values.
+
+The following modern combat items are disabled for normal players by default:
+
+- Trident
+- Mace
+- Shield
+- Spear
+- Wind Charge
+
+Restricted items are blocked from crafting, blocked/deleted on pickup, rejected from creative inventory for players without bypass permission, and continuously removed if another command or plugin places one directly into a player's inventory.
+
+Players are privately told:
+
+```text
+This item is disabled and has been deleted.
+```
+
+Administrators can bypass the restriction with:
+
+```text
+miracombat.restricted-items.bypass
+```
+
+This permission defaults to OP.
+
+The restricted material list and delete message are configurable in `config.yml`.
+
+## Combat foundation
+
+MiraCombat provides a configurable **1.7-style PvP baseline** on a modern Paper server:
 
 - removes the modern weapon attack cooldown by applying a high attack-speed profile
 - restores each player's original attack speed when they quit or when the plugin disables
@@ -26,7 +56,7 @@ MiraCombat provides a configurable old-school PvP baseline on a modern Paper ser
 - MiraCore module health registration
 - public `MiraCombatApi`
 
-The tuning is intentionally config-driven. The goal is to get the server mechanically close to the 1.8 PvP feel, then tune exact knockback and timing values through in-game testing rather than hardcoding one profile forever.
+The tuning is intentionally config-driven. The goal is to reproduce the responsive old-school 1.7 PvP feel on a modern server while keeping exact knockback and timing values easy to tune in-game.
 
 ## Commands
 
@@ -49,6 +79,19 @@ combat:
   disable-sweep-attacks: true
   disable-shields: true
   reset-sprint-on-hit: true
+
+  legacy-tooltips:
+    hide-attack-attributes: true
+
+  restricted-items:
+    enabled: true
+    delete-message: "&cThis item is disabled and has been deleted."
+    materials:
+      - TRIDENT
+      - MACE
+      - SHIELD
+      - SPEAR
+      - WIND_CHARGE
 
   knockback:
     horizontal: 0.40
@@ -89,18 +132,14 @@ The API currently exposes whether MiraCombat is enabled, the active attack-speed
 2. Restart Paper 1.21.11.
 3. Run `/mcombat test` and expect `7/7 passed`.
 4. Run `/miracore status` and confirm MiraCombat is HEALTHY.
-5. Spam-click a sword and confirm there is no modern attack cooldown penalty.
-6. Confirm sword sweep damage is disabled.
-7. Confirm shields cannot be used to block.
+5. Hover a sword or axe and confirm Attack Damage / Attack Speed lines are hidden.
+6. Spam-click a sword and confirm there is no modern attack cooldown penalty.
+7. Confirm sword sweep damage is disabled.
 8. Fight another player and judge horizontal/vertical knockback and W-tap behaviour.
 9. Hit another player with a fishing rod, snowball and egg.
-10. Throw consecutive ender pearls and confirm the configured cooldown.
-11. With hunger at 18+, confirm natural healing uses the slower legacy cadence.
+10. Try to obtain a Trident, Mace, Shield, Spear or Wind Charge as a normal player and confirm it is deleted with the warning message.
+11. Give an OP the same items and confirm the bypass permission works.
 12. Run `/mcombat reload` after tuning `config.yml` and confirm changes apply without restarting.
-
-## Not yet claimed as exact 1.8 parity
-
-v0.1.0 is the combat foundation. We still need real player-vs-player testing before locking the final knockback profile, and later passes can add deeper compatibility such as legacy armor/damage formula tuning, potion-strength differences, sword-block simulation if practical on modern clients, and any factions-specific combat rules we decide to support.
 
 ## Building
 
@@ -111,5 +150,5 @@ gradle clean test build
 Output:
 
 ```text
-build/libs/MiraCombat-0.1.0.jar
+build/libs/MiraCombat-0.1.1.jar
 ```
