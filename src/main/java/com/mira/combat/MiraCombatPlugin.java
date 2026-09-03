@@ -1,12 +1,15 @@
 package com.mira.combat;
 
 import com.mira.combat.api.MiraCombatApi;
+import com.mira.combat.command.BountyCommand;
 import com.mira.combat.command.MiraCombatCommand;
+import com.mira.combat.listener.BountyListener;
 import com.mira.combat.listener.CombatListener;
 import com.mira.combat.listener.ItemPolicyListener;
 import com.mira.combat.listener.PvpDummyListener;
 import com.mira.combat.listener.RegenerationListener;
 import com.mira.combat.listener.WorldPolicyListener;
+import com.mira.combat.service.BountyService;
 import com.mira.combat.service.CombatProfileService;
 import com.mira.combat.service.ItemPolicyService;
 import com.mira.combat.service.PvpDummyService;
@@ -25,6 +28,7 @@ public final class MiraCombatPlugin extends JavaPlugin {
     private ItemPolicyService itemPolicy;
     private WorldPolicyService worldPolicy;
     private PvpDummyService dummies;
+    private BountyService bounties;
     private MiraCombatApi api;
 
     @Override
@@ -36,7 +40,8 @@ public final class MiraCombatPlugin extends JavaPlugin {
         itemPolicy = new ItemPolicyService(this, core);
         worldPolicy = new WorldPolicyService(this);
         dummies = new PvpDummyService(this);
-        api = new MiraCombatApiImpl(this, profiles);
+        bounties = new BountyService(this);
+        api = new MiraCombatApiImpl(this, profiles, bounties);
 
         core.modules().register(this, "MiraCombat");
         core.services().register(MiraCombatApi.class, api);
@@ -45,6 +50,7 @@ public final class MiraCombatPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ItemPolicyListener(this, itemPolicy), this);
         getServer().getPluginManager().registerEvents(new WorldPolicyListener(worldPolicy), this);
         getServer().getPluginManager().registerEvents(new PvpDummyListener(dummies), this);
+        getServer().getPluginManager().registerEvents(new BountyListener(core, bounties), this);
 
         RegenerationListener regeneration = new RegenerationListener(this);
         getServer().getPluginManager().registerEvents(regeneration, this);
@@ -61,13 +67,22 @@ public final class MiraCombatPlugin extends JavaPlugin {
         pluginCommand.setExecutor(command);
         pluginCommand.setTabCompleter(command);
 
+        PluginCommand bountyCommand = getCommand("bounty");
+        if (bountyCommand != null) {
+            BountyCommand handler = new BountyCommand(core, bounties);
+            bountyCommand.setExecutor(handler);
+            bountyCommand.setTabCompleter(handler);
+        }
+
         for (Player player : getServer().getOnlinePlayers()) {
             profiles.apply(player);
             itemPolicy.enforce(player);
         }
 
-        core.modules().setHealth(this, ModuleHealth.HEALTHY,
-                "Legacy combat, modern sound suppression, PvP dummies and world policy ready");
+        core.modules().setHealth(this, bounties.economyReady() ? ModuleHealth.HEALTHY : ModuleHealth.DEGRADED,
+                bounties.economyReady()
+                        ? "Legacy combat, PvP dummies, world policy and player bounties ready"
+                        : "Combat ready; Vault economy unavailable so bounties are disabled");
         getLogger().info("MiraCombat v" + getPluginMeta().getVersion() + " enabled.");
     }
 
