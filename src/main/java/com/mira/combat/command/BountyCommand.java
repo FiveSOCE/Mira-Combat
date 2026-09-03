@@ -28,7 +28,7 @@ public final class BountyCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             if (!(sender instanceof Player player)) {
-                sender.sendMessage("Use /bounty <player> [amount] or /bounty top");
+                core.messages().send(sender, "&eUse /bounty <player> [amount] or /bounty top");
                 return true;
             }
             double current = bounties.amount(player.getUniqueId());
@@ -36,33 +36,33 @@ public final class BountyCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         if (args[0].equalsIgnoreCase("top")) {
-            sender.sendMessage(core.messages().parse("&6&lTop Bounties"));
+            core.messages().send(sender, "&6&lTop Bounties");
             int rank = 1;
             for (Map.Entry<UUID, Double> entry : bounties.top(10).entrySet()) {
-                sender.sendMessage(core.messages().parse("&e#" + rank++ + " &f" + bounties.lastKnownName(entry.getKey()) + " &7- &a$" + String.format("%,.2f", entry.getValue())));
+                core.messages().send(sender, "&e#" + rank++ + " &f" + bounties.lastKnownName(entry.getKey()) + " &7- &a$" + String.format("%,.2f", entry.getValue()));
             }
             return true;
         }
         if (args[0].equalsIgnoreCase("clear")) {
             if (!sender.hasPermission("miracombat.bounty.admin")) {
-                sender.sendMessage(core.messages().parse("&cYou do not have permission."));
+                core.messages().send(sender, "&cYou do not have permission.");
                 return true;
             }
             if (args.length < 2) return false;
             OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
             double cleared = bounties.clear(target.getUniqueId());
-            sender.sendMessage(core.messages().parse("&aCleared &f" + target.getName() + "&a's bounty (&f$" + String.format("%,.2f", cleared) + "&a)."));
+            core.messages().send(sender, "&aCleared &f" + target.getName() + "&a's bounty (&f$" + String.format("%,.2f", cleared) + "&a).");
             return true;
         }
 
         OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
         if (args.length == 1) {
             double current = bounties.amount(target.getUniqueId());
-            sender.sendMessage(core.messages().parse("&6Bounty on &f" + (target.getName() == null ? args[0] : target.getName()) + "&6: &a$" + String.format("%,.2f", current)));
+            core.messages().send(sender, "&6Bounty on &f" + (target.getName() == null ? args[0] : target.getName()) + "&6: &a$" + String.format("%,.2f", current));
             return true;
         }
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Only players can fund bounties.");
+            core.messages().send(sender, "&cOnly players can fund bounties.");
             return true;
         }
         if (!player.hasPermission("miracombat.bounty.place")) {
@@ -80,7 +80,7 @@ public final class BountyCommand implements CommandExecutor, TabCompleter {
             core.messages().send(player, "&cCould not place that bounty. Check your balance and target.");
             return true;
         }
-        Bukkit.broadcast(core.messages().parse("&6[Bounty] &f" + player.getName() + " &7added &a$" + String.format("%,.2f", amount) + " &7to &f" + target.getName() + "&7. Total: &a$" + String.format("%,.2f", bounties.amount(target.getUniqueId()))));
+        Bukkit.broadcast(core.messages().prefix().append(core.messages().parse("&6[Bounty] &f" + player.getName() + " &7added &a$" + String.format("%,.2f", amount) + " &7to &f" + target.getName() + "&7. Total: &a$" + String.format("%,.2f", bounties.amount(target.getUniqueId())))));
         return true;
     }
 
