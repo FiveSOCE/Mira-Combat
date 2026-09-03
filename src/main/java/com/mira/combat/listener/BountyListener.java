@@ -27,7 +27,7 @@ public final class BountyListener implements Listener {
         double paid = bounties.claim(killer, victim);
         if (paid <= 0.0D) return;
         String money = String.format("%,.2f", paid);
-        Bukkit.broadcast(core.messages().parse("&6[Bounty] &f" + killer.getName() + " &7claimed &a$" + money + " &7for eliminating &f" + victim.getName() + "&7!"));
+        Bukkit.broadcast(core.messages().prefix().append(core.messages().parse("&6[Bounty] &f" + killer.getName() + " &7claimed &a$" + money + " &7for eliminating &f" + victim.getName() + "&7!")));
         core.milestones().award(killer.getUniqueId(), "miracombat.bounty_claim", "MiraCombat", Map.of("victim", victim.getName(), "amount", Double.toString(paid)));
     }
 }
