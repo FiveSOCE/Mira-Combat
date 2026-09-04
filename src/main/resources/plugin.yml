@@ -1,11 +1,10 @@
 name: MiraCombat
-version: 0.1.4
+version: 0.1.5
 main: com.mira.combat.MiraCombatPlugin
 api-version: '1.21'
 authors: [FiveS]
-description: Configurable 1.7-style PvP mechanics and player bounties for the Mira plugin ecosystem.
+description: Configurable 1.7-style PvP mechanics for the Mira plugin ecosystem.
 depend: [MiraCore]
-softdepend: [Vault]
 
 commands:
   miracombat:
@@ -13,21 +12,10 @@ commands:
     usage: /miracombat <status|test|reload|apply|dummy>
     aliases: [mcombat]
     permission: miracombat.admin
-  bounty:
-    description: View, place and claim player bounties.
-    usage: /bounty <player> [amount] | /bounty top
-    aliases: [bounties]
-
 permissions:
   miracombat.admin:
     description: Allows MiraCombat administration commands and PvP dummy management.
     default: op
   miracombat.restricted-items.bypass:
     description: Allows possession and use of items disabled by MiraCombat.
-    default: op
-  miracombat.bounty.place:
-    description: Allows players to fund bounties.
-    default: true
-  miracombat.bounty.admin:
-    description: Allows clearing bounties.
     default: op
