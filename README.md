@@ -4,7 +4,7 @@ MiraCombat is the PvP/combat engine for the Mira Paper server suite. It recreate
 
 ## Download
 
-[**Download MiraCombat v0.1.5**](https://github.com/FiveSOCE/Mira-Combat/releases/download/v0.1.5/MiraCombat-0.1.5.jar)
+[**Download MiraCombat v0.1.5**](https://github.com/FiveSOCE/Mira-Combat/releases/download/v0.1.6/MiraCombat-0.1.6.jar)
 
 ## Requirements / Dependencies
 
