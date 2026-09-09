@@ -1,10 +1,14 @@
 # MiraCombat
 
-MiraCombat is the PvP/combat engine for the Mira Paper server suite. It recreates a configurable old-school 1.7-style combat feel on modern Paper, controls restricted modern combat items and world content, and provides combat diagnostics plus persistent PvP test dummies.
-
 ## Download
 
-[**Download MiraCombat v0.1.5**](https://github.com/FiveSOCE/Mira-Combat/releases/download/v0.1.6/MiraCombat-0.1.6.jar)
+**Latest compatibility release: v0.1.6**
+
+[**Download MiraCombat-0.1.6.jar**](https://github.com/FiveSOCE/Mira-Combat/releases/download/v0.1.6/MiraCombat-0.1.6.jar)
+
+[View all releases](https://github.com/FiveSOCE/Mira-Combat/releases)
+
+MiraCombat is the PvP/combat engine for the Mira Paper server suite. It recreates a configurable old-school 1.7-style combat feel on modern Paper, controls restricted modern combat items and world content, and provides combat diagnostics plus persistent PvP test dummies.
 
 ## Requirements / Dependencies
 
