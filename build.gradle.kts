@@ -58,4 +58,4 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.test { useJUnitPlatform() }
 
-tasks.jar { archiveFileName.set("MiraCombat-${project.version}.jar") }
+tasks.jar { archiveFileName.set("MiraCombat_1.21.11-26.2.jar") }
