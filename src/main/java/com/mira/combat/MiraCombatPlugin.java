@@ -68,7 +68,7 @@ public final class MiraCombatPlugin extends JavaPlugin {
 
         core.modules().setHealth(this, ModuleHealth.HEALTHY,
                 "Legacy combat, PvP dummies, item policy and world policy ready");
-        getLogger().info("MiraCombat v" + getPluginMeta().getVersion() + " enabled.");
+        getLogger().info("MiraCombat v" + getDescription().getVersion() + " enabled.");
     }
 
     @Override
