@@ -1,7 +1,7 @@
 name: MiraCombat
-version: 0.1.6
+version: 0.1.6-1.18.2
 main: com.mira.combat.MiraCombatPlugin
-api-version: '1.21'
+api-version: '1.18'
 authors: [FiveS]
 description: Configurable 1.7-style PvP mechanics for the Mira plugin ecosystem.
 depend: [MiraCore]
