@@ -31,6 +31,10 @@ MiraCombat provides configurable old-school Factions combat: no modern attack co
 
 Alias: `/miracombat`. Back up `plugins/MiraCombat/` before switching versions.
 
+## Paper 1.18.2 implementation notes
+
+The 1.18.2 API lacks modern `EntityKnockbackByEntityEvent` and `AsyncStructureSpawnEvent`. This legacy variant applies custom melee knockback on the next server tick following uncancelled damage. This can differ from the newer immediate knockback event, so PvP knockback needs gameplay verification. Mob spawn restriction still uses `CreatureSpawnEvent`, but **structure-generation restriction is not implemented on the legacy target**; do not rely on the `blocked-structures` setting to prevent terrain structures in 1.18.2. All combat configuration, player item restrictions and training dummies remain compiled into this variant.
+
 ## How MiraCombat Works
 
 MiraCombat applies a configurable legacy PvP profile to players, including effectively removing the modern attack cooldown, disabling sweep attacks and shield blocking, suppressing modern player attack sounds, resetting sprint after successful melee hits, and applying configurable player and projectile knockback. It also supports configurable hurt-resistance timing, zero/low ender-pearl cooldowns and legacy-style slow satiated regeneration.
