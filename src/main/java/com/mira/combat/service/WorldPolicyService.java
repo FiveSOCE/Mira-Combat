@@ -29,7 +29,7 @@ public final class WorldPolicyService {
 
     @SuppressWarnings("deprecation")
     public boolean isBlockedStructure(String key) {
-        if (structure == null) return false;
+        if (key == null) return false;
         key = key.toUpperCase(Locale.ROOT);
         return blockedStructureNames.contains(key);
     }
