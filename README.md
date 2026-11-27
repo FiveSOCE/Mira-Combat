@@ -1,20 +1,35 @@
 # MiraCombat
 
-## Download
+## Version-specific JAR downloads
 
-**Latest compatibility release: v0.1.6**
+| Paper version | Java | Filename | Download |
+| --- | --- | --- | --- |
+| **1.18.2** | 17 | `MiraCombat_1.18.2.jar` | [Legacy release](https://github.com/FiveSOCE/Mira-Combat/releases/tag/dev-1.18.2) |
+| **1.21.11–26.2** | 21 baseline; newest server may require Java 25 | `MiraCombat_1.21.11-26.2.jar` | [Modern release](https://github.com/FiveSOCE/Mira-Combat/releases/tag/compat-modern-1.21.11-26.2) |
 
-[**Download MiraCombat-0.1.6.jar**](https://github.com/FiveSOCE/Mira-Combat/releases/download/v0.1.6/MiraCombat-0.1.6.jar)
+These links are usable only once the named JAR is published after a successful CI build. **Live PvP regression tests and Paper 1.19–1.21.10 verification are still outstanding.** Do not install both variants.
 
-[View all releases](https://github.com/FiveSOCE/Mira-Combat/releases)
+[Legacy source](https://github.com/FiveSOCE/Mira-Combat/tree/compat/1.18.2) · [Modern source](https://github.com/FiveSOCE/Mira-Combat) · [All releases](https://github.com/FiveSOCE/Mira-Combat/releases)
 
-MiraCombat is the PvP/combat engine for the Mira Paper server suite. It recreates a configurable old-school 1.7-style combat feel on modern Paper, controls restricted modern combat items and world content, and provides combat diagnostics plus persistent PvP test dummies.
+MiraCombat provides configurable old-school Factions combat: no modern attack cooldown, sprint-reset/knockback tuning, projectile and pearl controls, restricted modern items, and protected testing dummies.
 
-## Requirements / Dependencies
+## Dependencies and permissions
 
-- Paper 1.21.11
-- Java 21
-- MiraCore 0.2.0 or newer
+- **Required:** Matching Paper/Java runtime and version-matched **MiraCore**.
+- **Not required:** Vault, LuckPerms, EssentialsX or MiraFactions.
+- `miracombat.admin` (OP): Admin diagnostics, apply/reload combat settings and manage PvP dummies.
+- `miracombat.restricted-items.bypass` (OP): Bypass configured restricted-item policy.
+
+## Commands
+
+| Command | Permission | Purpose |
+| --- | --- | --- |
+| `/mcombat status`, `/mcombat test` | `miracombat.admin` | View status and run diagnostics |
+| `/mcombat reload`, `/mcombat apply` | `miracombat.admin` | Reload and apply combat configuration |
+| `/mcombat dummy add`, `/mcombat dummy remove` | `miracombat.admin` | Manage protected PvP training dummies |
+| `/mcombat help` | `miracombat.admin` | Show administration help |
+
+Alias: `/miracombat`. Back up `plugins/MiraCombat/` before switching versions.
 
 ## How MiraCombat Works
 
