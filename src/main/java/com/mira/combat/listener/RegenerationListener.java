@@ -51,7 +51,7 @@ public final class RegenerationListener implements Listener, Runnable {
             }
             counters.put(player.getUniqueId(), 0);
 
-            AttributeInstance maxHealthAttribute = player.getAttribute(Attribute.MAX_HEALTH);
+            AttributeInstance maxHealthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
             if (maxHealthAttribute == null) continue;
             double maxHealth = maxHealthAttribute.getValue();
             if (player.getHealth() >= maxHealth) continue;
