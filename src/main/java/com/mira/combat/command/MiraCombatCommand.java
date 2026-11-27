@@ -88,7 +88,7 @@ public final class MiraCombatCommand implements TabExecutor {
     }
 
     private void status(CommandSender sender) {
-        core.messages().send(sender, "&dMiraCombat v" + plugin.getPluginMeta().getVersion());
+        core.messages().send(sender, "&dMiraCombat v" + plugin.getDescription().getVersion());
         core.messages().send(sender, "&7Enabled: " + yes(plugin.combatEnabled())
                 + " &7Attack speed: &f" + plugin.attackSpeed()
                 + " &7Max hurt ticks: &f" + plugin.maximumNoDamageTicks());
