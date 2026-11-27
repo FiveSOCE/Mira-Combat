@@ -4,10 +4,10 @@
 
 | Paper version | Java | Filename | Download |
 | --- | --- | --- | --- |
-| **1.18.2** | 17 | `MiraCombat_1.18.2.jar` | [Legacy release](https://github.com/FiveSOCE/Mira-Combat/releases/tag/dev-1.18.2) |
-| **1.21.11–26.2** | 21 baseline; newest server may require Java 25 | `MiraCombat_1.21.11-26.2.jar` | [Modern release](https://github.com/FiveSOCE/Mira-Combat/releases/tag/compat-modern-1.21.11-26.2) |
+| **1.18.2** | 17 | `MiraCombat_1.18.2.jar` | [Download legacy JAR](https://github.com/FiveSOCE/Mira-Combat/releases/download/dev-1.18.2/MiraCombat_1.18.2.jar) |
+| **1.21.11–26.2** | 21 baseline; newest server may require Java 25 | `MiraCombat_1.21.11-26.2.jar` | [Download modern JAR](https://github.com/FiveSOCE/Mira-Combat/releases/download/compat-modern-1.21.11-26.2/MiraCombat_1.21.11-26.2.jar) |
 
-These links are usable only once the named JAR is published after a successful CI build. **Live PvP regression tests and Paper 1.19–1.21.10 verification are still outstanding.** Do not install both variants.
+Both named JAR assets are verified as published after successful CI builds. **Live PvP regression tests and Paper 1.19–1.21.10 verification are still outstanding.** Do not install both variants.
 
 [Legacy source](https://github.com/FiveSOCE/Mira-Combat/tree/compat/1.18.2) · [Modern source](https://github.com/FiveSOCE/Mira-Combat) · [All releases](https://github.com/FiveSOCE/Mira-Combat/releases)
 
