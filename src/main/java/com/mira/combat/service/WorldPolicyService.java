@@ -2,7 +2,7 @@ package com.mira.combat.service;
 
 import com.mira.combat.MiraCombatPlugin;
 import org.bukkit.entity.EntityType;
-import org.bukkit.generator.structure.Structure;
+
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -28,9 +28,9 @@ public final class WorldPolicyService {
     }
 
     @SuppressWarnings("deprecation")
-    public boolean isBlockedStructure(Structure structure) {
+    public boolean isBlockedStructure(String key) {
         if (structure == null) return false;
-        String key = structure.getKey().getKey().toUpperCase(Locale.ROOT);
+        key = key.toUpperCase(Locale.ROOT);
         return blockedStructureNames.contains(key);
     }
 
