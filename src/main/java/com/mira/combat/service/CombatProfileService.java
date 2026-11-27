@@ -23,7 +23,7 @@ public final class CombatProfileService {
             return;
         }
 
-        AttributeInstance attackSpeed = player.getAttribute(Attribute.ATTACK_SPEED);
+        AttributeInstance attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
         if (attackSpeed == null) return;
 
         original.computeIfAbsent(player.getUniqueId(), ignored ->
@@ -59,7 +59,7 @@ public final class CombatProfileService {
     }
 
     private void restoreValues(Player player, OriginalState state) {
-        AttributeInstance attackSpeed = player.getAttribute(Attribute.ATTACK_SPEED);
+        AttributeInstance attackSpeed = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
         if (attackSpeed != null) attackSpeed.setBaseValue(state.attackSpeed());
         player.setMaximumNoDamageTicks(state.maximumNoDamageTicks());
     }
