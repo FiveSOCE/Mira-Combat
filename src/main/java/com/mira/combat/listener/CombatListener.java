@@ -19,7 +19,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityKnockbackByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -80,6 +79,8 @@ public final class CombatListener implements Listener {
                 Bukkit.getScheduler().runTask(plugin, () -> suppressModernAttackSounds(attacker));
             }
 
+            if (event.getEntity() instanceof Player victim) applyLegacyKnockback(attacker, victim);
+
             if (plugin.resetSprintOnHit() && event.getEntity() instanceof Player) {
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     if (attacker.isOnline()) attacker.setSprinting(false);
@@ -98,26 +99,26 @@ public final class CombatListener implements Listener {
         }
     }
 
-    @SuppressWarnings("removal")
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onKnockback(EntityKnockbackByEntityEvent event) {
+    /**
+     * Paper 1.18.2 predates EntityKnockbackByEntityEvent. Apply the configured
+     * velocity in the next tick after a valid PvP melee hit. The original hit
+     * still runs through Bukkit's cancellation and damage checks.
+     */
+    private void applyLegacyKnockback(Player attacker, Player victim) {
         if (!plugin.combatEnabled() || !plugin.knockbackEnabled()) return;
-        if (!(event.getEntity() instanceof Player victim) || !(event.getSourceEntity() instanceof Player attacker)) return;
-
         double horizontal = plugin.knockbackHorizontal();
         double vertical = plugin.knockbackVertical();
-
         if (attacker.isSprinting()) {
             horizontal += plugin.sprintHorizontalBonus();
             vertical += plugin.sprintVerticalBonus();
         }
-
         ItemStack weapon = attacker.getInventory().getItemInMainHand();
-        int knockbackLevel = weapon.getEnchantmentLevel(Enchantment.KNOCKBACK);
-        horizontal += knockbackLevel * plugin.enchantmentHorizontalBonus();
-
+        horizontal += weapon.getEnchantmentLevel(Enchantment.KNOCKBACK) * plugin.enchantmentHorizontalBonus();
         Vector direction = victim.getLocation().toVector().subtract(attacker.getLocation().toVector());
-        event.setFinalKnockback(CombatMath.knockback(direction, horizontal, vertical, plugin.knockbackVerticalLimit()));
+        Vector knockback = CombatMath.knockback(direction, horizontal, vertical, plugin.knockbackVerticalLimit());
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (victim.isOnline() && !victim.isDead()) victim.setVelocity(knockback);
+        });
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
